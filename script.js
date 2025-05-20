@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Disable Jira Click Edit
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.2
 // @description  Disable click edit in Jira issue descriptions
 // @author       fckngnthng
 // @match        https://jira.isimplelab.com/browse/*
@@ -20,6 +20,9 @@
      * @param {Event} e - The click event object.
      */
     function handleClick(e) {
+        if (e && e.target && e.target.tagName=='IMG') {
+            return;
+        }
         e.stopPropagation();
         GM_log("Blocked click-edit of Jira issue description. You're welcome.");
     }
@@ -27,7 +30,7 @@
     // Wait for the Jira issue description UI to load before creating the toggle button
     setTimeout(function() {
         const descriptionElement = document.getElementById('descriptionmodule');
-        GM_log('.ak-renderer-document', descriptionElement);
+        GM_log('descriptionmodule', descriptionElement);
         if (descriptionElement) {
             descriptionElement.addEventListener('click', handleClick, true);
         }
